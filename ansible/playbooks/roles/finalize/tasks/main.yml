@@ -6,7 +6,7 @@
   async: 0
   poll: 0
   ignore_errors: true
-  when: ansible_hostname != our_ansible_client
+  when: inventory_hostname != our_ansible_client
 
 - debug: msg="not restarting  {{ our_ansible_client }} -- PLEASE DO IT YOURSELF"
-  when: ansible_hostname == our_ansible_client
+  when: inventory_hostname == our_ansible_client
