@@ -1,4 +1,7 @@
 ---
+#define the host running ansible
+our_ansible_client: "master1"
+
 #define our network setup for each hosts
 list_interfaces:
    - { server_name: 'master1', intf_name: 'eth0', mode: 'dhcp' }
