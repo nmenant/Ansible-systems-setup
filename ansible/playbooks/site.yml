@@ -1,8 +1,5 @@
 ---
 #main ansible yml file
-- name: Fail if not running on Debian
-    fail: msg="These tasks should only be run on Debian/Ubuntu servers"
-    when: ansible_os_family != "Debian"
 
 #Test whether the extra-vars is set properly
 #- name: check install_mode value
@@ -23,13 +20,11 @@
   become_method: sudo
   connection: ssh
   gather_facts: yes
-
+ 
   roles: 
-    - setup-hosts-hostname
+    - initialize
     - networking
-
-
- #playbook to update/upgrade with apt and reboot the device
- - include: finalize-setup.yml
+    - setup-hosts-hostname
+    - finalize
 
 

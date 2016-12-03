@@ -6,4 +6,4 @@
 
 # set /etc/hostname for each device
 - name: Create /etc/hostname based on the name specified in the ansible inventory hosts file
-  template: src=hosts.j2 dest=/etc/hosts
+  template: src=hostname.j2 dest=/etc/hostname

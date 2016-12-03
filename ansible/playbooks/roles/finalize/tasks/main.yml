@@ -1,0 +1,10 @@
+---
+
+#finish the setup and reboot
+- name: restart machine
+  command: shutdown -r now "Ansible reboot triggered"
+  async: 0
+  poll: 0
+  ignore_errors: true
+
+

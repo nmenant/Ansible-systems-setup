@@ -1,20 +1,13 @@
 ---
 #define our network setup for each hosts
-
-master1:
-	'eth0': { mode: 'dhcp' }
-	'eth1': { mode: 'static', addr: '10.1.10.11', mask: '255.255.255.0' }
-
-master2:
-	'eth0': { mode: 'dhcp' }
-	'eth1': { mode: 'static', addr: '10.1.10.12', mask: '255.255.255.0' }
-
-node1:
-	'eth0': { mode: 'dhcp' }
-	'eth1': { mode: 'static', addr: '10.1.10.21', mask: '255.255.255.0' }
-	'eth2': { mode: 'static', addr: '10.1.20.21', mask: '255.255.255.0' }
-
-node2:
-	'eth0': { mode: 'dhcp' }
-	'eth1': { mode: 'static', addr: '10.1.10.22', mask: '255.255.255.0' }
-	'eth2': { mode: 'static', addr: '10.1.20.22', mask: '255.255.255.0' }
+list_interfaces:
+   - { server_name: 'master1', intf_name: 'eth0', mode: 'dhcp' }
+   - { server_name: 'master1', intf_name: 'eth1', mode: 'static', addr: '10.1.10.11', mask: '255.255.255.0' }
+   - { server_name: 'master2', intf_name: 'eth0', mode: 'dhcp' }
+   - { server_name: 'master2', intf_name: 'eth1', mode: 'static', addr: '10.1.10.12', mask: '255.255.255.0' }
+   - { server_name: 'node1', intf_name: 'eth0', mode: 'dhcp' }
+   - { server_name: 'node1', intf_name: 'eth1', mode: 'static', addr: '10.1.10.21', mask: '255.255.255.0' }
+   - { server_name: 'node1', intf_name: 'eth2', mode: 'static', addr: '10.1.20.21', mask: '255.255.255.0' }
+   - { server_name: 'node2', intf_name: 'eth0', mode: 'dhcp' }
+   - { server_name: 'node2', intf_name: 'eth1', mode: 'static', addr: '10.1.10.22', mask: '255.255.255.0' }
+   - { server_name: 'node2', intf_name: 'eth2', mode: 'static', addr: '10.1.20.22', mask: '255.255.255.0' }
