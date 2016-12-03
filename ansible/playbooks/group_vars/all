@@ -1,0 +1,20 @@
+---
+#define our network setup for each hosts
+
+master1:
+	'eth0': { mode: 'dhcp' }
+	'eth1': { mode: 'static', addr: '10.1.10.11', mask: '255.255.255.0' }
+
+master2:
+	'eth0': { mode: 'dhcp' }
+	'eth1': { mode: 'static', addr: '10.1.10.12', mask: '255.255.255.0' }
+
+node1:
+	'eth0': { mode: 'dhcp' }
+	'eth1': { mode: 'static', addr: '10.1.10.21', mask: '255.255.255.0' }
+	'eth2': { mode: 'static', addr: '10.1.20.21', mask: '255.255.255.0' }
+
+node2:
+	'eth0': { mode: 'dhcp' }
+	'eth1': { mode: 'static', addr: '10.1.10.22', mask: '255.255.255.0' }
+	'eth2': { mode: 'static', addr: '10.1.20.22', mask: '255.255.255.0' }

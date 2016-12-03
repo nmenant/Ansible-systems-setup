@@ -1,0 +1,9 @@
+---
+
+# copy our hosts file to /etc/hosts
+- name: Create /etc/hosts for each device
+  template: src=hosts.j2 dest=/etc/hosts
+
+# set /etc/hostname for each device
+- name: Create /etc/hostname based on the name specified in the ansible inventory hosts file
+  template: src=hosts.j2 dest=/etc/hosts

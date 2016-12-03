@@ -1,0 +1,35 @@
+---
+#main ansible yml file
+- name: Fail if not running on Debian
+    fail: msg="These tasks should only be run on Debian/Ubuntu servers"
+    when: ansible_os_family != "Debian"
+
+#Test whether the extra-vars is set properly
+#- name: check install_mode value
+#  hosts: local
+#  connection: local
+#  vars: 
+#    install_mode: "{{ install_mode|default('cluster') }}"
+#  tasks:
+#   - name: reject all install_mode but cluster or standalone
+#     fail: msg="Only install_mode=cluster and install_mode=standalone are supported"
+#     when: (install_mode != "cluster") and (install_mode != "standalone") 
+
+#playbook to replace files: /etc/hosts and /etc/hostname
+
+- hosts: all
+  remote_user: user
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+
+  roles: 
+    - setup-hosts-hostname
+    - networking
+
+
+ #playbook to update/upgrade with apt and reboot the device
+ - include: finalize-setup.yml
+
+

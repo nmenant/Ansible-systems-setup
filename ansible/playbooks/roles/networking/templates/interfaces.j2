@@ -1,0 +1,20 @@
+
+{% for intf in  {{ inventory_name }} %}
+	auto {{ intf }}
+	{% set items = inventory_name[intf] %}
+	{% for i in items %}
+		{% if i['mode'] == "dhcp" %}
+			iface {{ intf }} inet dhcp
+		{% else %}
+			iface {{ intf }} inet static
+			address {{ i['addr'] }}
+   			netmask {{ i['mask'] }}
+   			{% if i['gateway'] is defined %}
+				gateway i['gateway']
+			{% endif %}
+			{% if i['dns'] is defined %}
+				dns-nameservers i['dns']
+			{% endif %}
+		{% endif %}
+	{% endfor %}
+{% endfor %}
