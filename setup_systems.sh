@@ -5,7 +5,8 @@
 ## if not, return syntax usage
 ##
 key_file="/home/$USER/.ssh/id_rsa"
-hosts_file="hosts_file"
+ansible_hosts_file="ansible_hosts_file"
+system_hosts_file="systems_hosts_file"
 
 check_parameters() {
    if [ -z $1 ]; then
@@ -31,7 +32,7 @@ check_parameters() {
 check_hosts_file() {
    tmp=0
 
-   if [ -f $hosts_file ]; then
+   if [ -f $ansible_hosts_file ]; then
       while read -r line
       do
          name="$line"
@@ -40,11 +41,15 @@ check_hosts_file() {
          fi 
       done < "$hosts_file"
       if [ $tmp -eq 0 ]; then
-         printf "no system specified in %s. Exiting\n" $hosts_file
+         printf "no system specified in %s. Exiting\n" $ansible_hosts_file
          exit
       fi
    else
-      printf "couldn't find %s. Exiting...\n" $hosts_file
+      printf "couldn't find %s. Exiting...\n" $ansible_hosts_file
+      exit
+   fi
+   if [ ! -f $systems_hosts_file ]; then
+      printf "couldn't find %s. Exiting...\n" $systems_hosts_file
       exit
    fi
 }
