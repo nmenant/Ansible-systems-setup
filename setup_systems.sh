@@ -9,29 +9,33 @@ hosts_file="hosts_file"
 
 check_parameters() {
    if [ -z $1 ]; then
-      printf "Syntax: ./setup_systems.sh <setup or execute>\n - setup: setup the ssh keys, transfer keys , update sudoers and install git and ansible\n - execute: deploys the ansible playbook to setup the systems\n"
+      printf "Syntax: ./setup_systems.sh <setup or ansible or all>\n  - setup: setup the ssh keys, transfer keys , update sudoers and install git and ansible\n - ansible: deploys the ansible playbook to setup the systems\n - all: will do setup and then ansible\n"
       exit
    fi
    if [ ${1,,} == "setup" ]; then 
       return 1
-   elif [ ${1,,} == "execute" ]; then
+   elif [ ${1,,} == "ansible" ]; then
       return 2
+   elif [ ${1,,} == "all" ]; then
+      return 3
    else
-      printf "Syntax: ./setup_systems.sh <setup or execute>\n - setup: setup the ssh keys, transfer keys , update sudoers and install git and ansible\n - execute: deploys the ansible playbook to setup the systems\n"
+      printf "Syntax: ./setup_systems.sh <setup or ansible or all>\n - setup: setup the ssh keys, transfer keys , update sudoers and install git and ansible\n - ansible: deploys the ansible playbook to setup the systems\n - all: will do setup and then ansible\n"
       exit
    fi
 }
+
+##
+## Check the file hosts_file (default is hosts_file) to see if it exists. Then check that at least a system is defined into it
+##
 
 check_hosts_file() {
    tmp=0
 
    if [ -f $hosts_file ]; then
-      printf "checking hosts_file\nSystems to setup:\n"   
       while read -r line
       do
          name="$line"
          if [[ ! $name =~ ^'#' ]] && [[ ! $name == '' ]] && [[ ! $name =~ "[nodes]" ]]; then
-            printf "%s\n" $name
             tmp=1
          fi 
       done < "$hosts_file"
@@ -78,8 +82,8 @@ add_user_sudoer_nopasswd() {
       do
          name="$line"
          if [[ ! $name =~ ^'#' ]] && [[ ! $name == '' ]] && [[ ! $name =~ "[nodes]" ]]; then
-            printf "updating sudoer file on %s so that %s doesn't need password prompt with sudo commands" $name $USER
-            ssh -t $name 'sudo sh -c "echo \"$USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"'
+            printf "updating sudoer file on %s so that %s doesn't need password prompt with sudo commands\n" $name $USER
+            ssh -T $name 'sudo -S sh -c "echo \"$USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"'
          fi
    done < "$hosts_file"
 }
@@ -95,8 +99,12 @@ install_setup_ansible() {
    sudo apt-get install -y ansible
    printf "setting up ansible...\n"
    printf "copying %s to /etc/ansible/hosts" $hosts_file
+   
    sudo cp $hosts_file /etc/ansible/hosts
-
+   sudo sed -i s/#inventory/inventory/ /etc/ansible/ansible.cfg   
+   sudo sed -i s/#become_user/become_user/ /etc/ansible/ansible.cfg
+   sudo sed -i s/#host_key_checking/host_key_checking/ /etc/ansible/ansible.cfg 
+   
 }
 
 ##
@@ -116,6 +124,19 @@ setup_base() {
 }
 
 ##
+## with this function we will setup our playbook with the relevant information so that it's processed successfully
+## 1 - move interfaces_definition to our group_vars dir so that those will become variables in our playbook
+## 2 - move systems_hosts_file into our playbook so that this will be pushed on all our systems. 
+## 3 - launch the ansible playbook 
+##
+
+execute_ansible_playbook() {
+
+   cp interfaces_definition ansible/playbooks/group_vars/all
+   cp systems_host_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
+   ansible-playbooks ansible/playbooks/site.yml
+}
+##
 ## MAIN SCRIPT STARTS HERE
 ##
 
@@ -127,6 +148,9 @@ if [ "$res" -eq 1 ]; then
    printf "Setup option specified ... doing the systems preparation\n"
    setup_base
 elif [ "$res" -eq 2 ]; then
-   printf "Execute option specified ... launching ansible playbooks\n"
+   printf "Ansible option specified ... launching ansible playbooks\n"
+   execute_ansible_playbook
+elif [ "$res" -eq 3 ]; then
+   printf "All option specified ... doing Setup and Ansible playbook\n"
 fi
 
