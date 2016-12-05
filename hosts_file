@@ -1,0 +1,10 @@
+##
+## add your servers to update here. 
+## your system must be able to resolve the name you specify
+## put your systems name under the [nodes]  statement
+## 
+[nodes]
+master1
+master2
+node1
+
