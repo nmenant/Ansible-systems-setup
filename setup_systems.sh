@@ -79,7 +79,7 @@ transfer_public_key() {
          printf "copying key to %s" $name
          ssh-copy-id $USER@$name
       fi
-   done < "$hosts_file"
+   done < "$ansible_hosts_file"
 }
 
 add_user_sudoer_nopasswd() {
@@ -90,7 +90,7 @@ add_user_sudoer_nopasswd() {
             printf "updating sudoer file on %s so that %s doesn't need password prompt with sudo commands\n" $name $USER
             ssh -T $name 'sudo -S sh -c "echo \"$USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"'
          fi
-   done < "$hosts_file"
+   done < "$ansible_hosts_file"
 }
 
 update_upgrade_repos() {
@@ -105,7 +105,7 @@ install_setup_ansible() {
    printf "setting up ansible...\n"
    printf "copying %s to /etc/ansible/hosts" $hosts_file
    
-   sudo cp $hosts_file /etc/ansible/hosts
+   sudo cp $ansible_hosts_file /etc/ansible/hosts
    sudo sed -i s/#inventory/inventory/ /etc/ansible/ansible.cfg   
    sudo sed -i s/#become_user/become_user/ /etc/ansible/ansible.cfg
    sudo sed -i s/#host_key_checking/host_key_checking/ /etc/ansible/ansible.cfg 
@@ -139,7 +139,7 @@ execute_ansible_playbook() {
 
    cp ansible_variables ansible/playbooks/group_vars/all
    cp systems_host_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
-   ansible-playbooks ansible/playbooks/site.yml
+   ansible-playbook ansible/playbooks/site.yml
 }
 ##
 ## MAIN SCRIPT STARTS HERE
