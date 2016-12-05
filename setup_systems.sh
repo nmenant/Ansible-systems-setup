@@ -7,6 +7,7 @@
 key_file="/home/$USER/.ssh/id_rsa"
 ansible_hosts_file="ansible_hosts_file"
 systems_hosts_file="systems_hosts_file"
+user_password="user"
 
 check_parameters() {
    if [ -z $1 ]; then
@@ -88,7 +89,7 @@ add_user_sudoer_nopasswd() {
          name="$line"
          if [[ ! $name =~ ^'#' ]] && [[ ! $name == '' ]] && [[ ! $name =~ "[nodes]" ]]; then
             printf "updating sudoer file on %s so that %s doesn't need password prompt with sudo commands\n" $name $USER
-            ssh -T $name 'sudo -S sh -c "echo \"$USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"'
+            echo $user_password | ssh -T $name 'sudo -S sh -c "echo \"$USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"'
          fi
    done < "$ansible_hosts_file"
 }
