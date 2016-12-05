@@ -6,7 +6,7 @@
 ##
 key_file="/home/$USER/.ssh/id_rsa"
 ansible_hosts_file="ansible_hosts_file"
-system_hosts_file="systems_hosts_file"
+systems_hosts_file="systems_hosts_file"
 
 check_parameters() {
    if [ -z $1 ]; then
@@ -26,7 +26,7 @@ check_parameters() {
 }
 
 ##
-## Check the file hosts_file (default is hosts_file) to see if it exists. Then check that at least a system is defined into it
+## Check the hosts files (ansible and systems) to see if they exist. Then check that at least a system is defined into ansible_hosts_file
 ##
 
 check_hosts_file() {
@@ -39,7 +39,7 @@ check_hosts_file() {
          if [[ ! $name =~ ^'#' ]] && [[ ! $name == '' ]] && [[ ! $name =~ "[nodes]" ]]; then
             tmp=1
          fi 
-      done < "$hosts_file"
+      done < "$ansible_hosts_file"
       if [ $tmp -eq 0 ]; then
          printf "no system specified in %s. Exiting\n" $ansible_hosts_file
          exit
@@ -145,10 +145,10 @@ execute_ansible_playbook() {
 ## MAIN SCRIPT STARTS HERE
 ##
 
-check_hosts_file
 check_parameters $1
-
 res=$?
+check_hosts_file
+
 if [ "$res" -eq 1 ]; then
    printf "Setup option specified ... doing the systems preparation\n"
    setup_base
@@ -157,5 +157,7 @@ elif [ "$res" -eq 2 ]; then
    execute_ansible_playbook
 elif [ "$res" -eq 3 ]; then
    printf "All option specified ... doing Setup and Ansible playbook\n"
+   setup_base
+   execute_ansible_playbook
 fi
 
