@@ -130,14 +130,14 @@ setup_base() {
 
 ##
 ## with this function we will setup our playbook with the relevant information so that it's processed successfully
-## 1 - move interfaces_definition to our group_vars dir so that those will become variables in our playbook
+## 1 - move ansible_variables to our group_vars dir so that those will become variables in our playbook. It includes different needed information
 ## 2 - move systems_hosts_file into our playbook so that this will be pushed on all our systems. 
 ## 3 - launch the ansible playbook 
 ##
 
 execute_ansible_playbook() {
 
-   cp interfaces_definition ansible/playbooks/group_vars/all
+   cp ansible_variables ansible/playbooks/group_vars/all
    cp systems_host_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
    ansible-playbooks ansible/playbooks/site.yml
 }
