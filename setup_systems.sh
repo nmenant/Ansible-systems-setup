@@ -73,15 +73,46 @@ transfer_public_key() {
    done < "$hosts_file"
 }
 
+add_user_sudoer_nopasswd() {
+   while read -r line
+      do
+         name="$line"
+         if [[ ! $name =~ ^'#' ]] && [[ ! $name == '' ]] && [[ ! $name =~ "[nodes]" ]]; then
+            printf "updating sudoer file on %s so that %s doesn't need password prompt with sudo commands" $name $USER
+            ssh -t $name 'sudo sh -c "echo \"$USER ALL=(ALL:ALL) NOPASSWD: ALL\" >> /etc/sudoers"'
+         fi
+   done < "$hosts_file"
+}
+
+update_upgrade_repos() {
+   sudo apt-get update
+   sudo apt-get install -y software-properties-common
+   sudo apt-add-repository ppa:ansible/ansible -y
+   sudo apt-get update
+}
+
+install_setup_ansible() {
+   sudo apt-get install -y ansible
+   printf "setting up ansible...\n"
+   printf "copying %s to /etc/ansible/hosts" $hosts_file
+   sudo cp $hosts_file /etc/ansible/hosts
+
+}
+
 ##
 ## The main function for the setup argument
 ## 1 - we check that our ssh private key exist (based on variable key_file)
 ## 2 - we copy the public key on all the specified hosts
-##
+## 3 - we update /etc/sudoers on each systems so that our user won't be prompted for password when issuing sudo command ... needed for ansible
+## 4 - add ansible repo to systems and do update / upgrade
+## 5 - install git and ansible. Once it's done, retrieve our git repo https://github.com/nmenant/Ansible-systems-setup (dev) , setup ansible config files
 
 setup_base() {
    check_id_rsa_exists
    transfer_public_key
+   add_user_sudoer_nopasswd
+   update_upgrade_repos
+   install_setup_ansible
 }
 
 ##
