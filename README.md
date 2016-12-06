@@ -38,7 +38,9 @@ To run the solution, you'll launch the script setup_systems.sh
 
 Here is the syntax: 
 
-Syntax: ./setup_systems.sh <setup or ansible or all> 
+    Syntax: ./setup_systems.sh <setup or ansible or all>
+ 
+Here are the options : 
  * setup: setup the ssh keys, transfer keys , update sudoers and install git and ansible
  * ansible: deploys the ansible playbook to setup the systems
  * all: will do setup and then ansible
