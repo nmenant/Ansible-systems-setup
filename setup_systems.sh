@@ -143,6 +143,9 @@ execute_ansible_playbook() {
    printf "copying %s as hosts.j2 in ansible/playbooks/roles/setup-hosts-hostname/templates/\n" $systems_hosts_file
    cp $systems_hosts_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
    ansible-playbook ansible/playbooks/site.yml
+   printf "##############################################\n"
+   printf "SETUP IS FINALIZED - PLEASE REBOOT THIS SYSTEM\n"
+   printf "##############################################\n"
 }
 ##
 ## MAIN SCRIPT STARTS HERE
