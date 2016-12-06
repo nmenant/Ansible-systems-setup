@@ -104,7 +104,7 @@ update_upgrade_repos() {
 install_setup_ansible() {
    sudo apt-get install -y ansible
    printf "setting up ansible...\n"
-   printf "copying %s to /etc/ansible/hosts" $hosts_file
+   printf "copying %s to /etc/ansible/hosts" $ansible_hosts_file
    
    sudo cp $ansible_hosts_file /etc/ansible/hosts
    sudo sed -i s/#inventory/inventory/ /etc/ansible/ansible.cfg   
@@ -138,8 +138,10 @@ setup_base() {
 
 execute_ansible_playbook() {
 
+   printf "copying ansible_variables as all in ansible/playbooks/group_vars/"
    cp ansible_variables ansible/playbooks/group_vars/all
-   cp systems_hosts_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
+   printf "copying %s as hosts.j2 in ansible/playbooks/roles/setup-hosts-hostname/templates/" $systems_hosts_file
+   cp $systems_hosts_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
    ansible-playbook ansible/playbooks/site.yml
 }
 ##
