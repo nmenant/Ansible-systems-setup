@@ -139,7 +139,7 @@ setup_base() {
 execute_ansible_playbook() {
 
    cp ansible_variables ansible/playbooks/group_vars/all
-   cp systems_host_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
+   cp systems_hosts_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
    ansible-playbook ansible/playbooks/site.yml
 }
 ##
