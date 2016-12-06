@@ -138,9 +138,9 @@ setup_base() {
 
 execute_ansible_playbook() {
 
-   printf "copying ansible_variables as all in ansible/playbooks/group_vars/"
+   printf "copying ansible_variables as all in ansible/playbooks/group_vars/\n"
    cp ansible_variables ansible/playbooks/group_vars/all
-   printf "copying %s as hosts.j2 in ansible/playbooks/roles/setup-hosts-hostname/templates/" $systems_hosts_file
+   printf "copying %s as hosts.j2 in ansible/playbooks/roles/setup-hosts-hostname/templates/\n" $systems_hosts_file
    cp $systems_hosts_file ansible/playbooks/roles/setup-hosts-hostname/templates/hosts.j2
    ansible-playbook ansible/playbooks/site.yml
 }
