@@ -1,0 +1,7 @@
+---
+
+#will set /etc/network/interfaces on each device
+
+# copy our hosts file to /etc/hosts
+- name: Create /etc/network/interface for each device
+  template: src=interfaces.j2 dest=/etc/network/interfaces

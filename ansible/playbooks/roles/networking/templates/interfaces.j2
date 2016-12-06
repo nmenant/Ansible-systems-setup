@@ -1,0 +1,19 @@
+{% for interface in list_interfaces %}
+   {% if interface.server_name == inventory_hostname %}
+auto {{ interface.intf_name }}
+      {% if interface.mode == 'dhcp' %}
+iface {{ interface.intf_name }} inet dhcp
+      {% else %}
+iface {{ interface.intf_name }} inet static
+      address {{ interface.addr }}
+      netmask {{ interface.mask }}
+         {% if interface.gateway is defined %}
+      gateway {{ interface.gateway }}
+         {% endif %}
+         {% if interface.dns is defined %}
+      dns-nameservers {{ interface.dns }}
+         {% endif %}
+      {% endif %}
+      
+   {% endif %}
+{% endfor %}

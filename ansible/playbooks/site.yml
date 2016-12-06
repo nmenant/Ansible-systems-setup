@@ -1,0 +1,30 @@
+---
+#main ansible yml file
+
+#Test whether the extra-vars is set properly
+#- name: check install_mode value
+#  hosts: local
+#  connection: local
+#  vars: 
+#    install_mode: "{{ install_mode|default('cluster') }}"
+#  tasks:
+#   - name: reject all install_mode but cluster or standalone
+#     fail: msg="Only install_mode=cluster and install_mode=standalone are supported"
+#     when: (install_mode != "cluster") and (install_mode != "standalone") 
+
+#playbook to replace files: /etc/hosts and /etc/hostname
+
+- hosts: all
+  remote_user: user
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+ 
+  roles: 
+    - initialize
+    - networking
+    - setup-hosts-hostname
+    - finalize
+
+
