@@ -15,7 +15,7 @@ We will do the setup via a shell script that will call an [ansible playbooks](ht
 
 The shell script will: 
 
- * Setup the environment to be able to use ansible (create ssh keys if they don't exist, copy key, enable sudo without password, )
+ * Setup the environment to be able to use ansible (create ssh keys if they don't exist, copy key, enable sudo without password, ) - **the user must be allowed to do sudo commands to make this work**
  * call ansible playbook once the environment is staged properly (setup /etc/hosts, hostname and network interfaces)
 
 <hr>
