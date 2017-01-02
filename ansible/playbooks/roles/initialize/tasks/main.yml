@@ -6,6 +6,11 @@
    fail: msg="These tasks should only be run on Debian/Ubuntu servers"
    when: ansible_os_family != "Debian"
 
+#with version 16, aptitude is not installed by default, need to make sure it is here 
+ - name: install apt requirements
+   become: yes
+   apt: pkg=aptitude
+
  - name: update and upgrade apt packages
    apt:
     upgrade=yes
